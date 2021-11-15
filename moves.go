@@ -1,21 +1,21 @@
 package main
 
-func pawnMoves(board board, pi int) []move {
+func pawnMoves(board Board, pi int) []Move {
 	p := board[pi]
 	direction := 1
-	if p.color == white {
+	if p.Color == white {
 		direction = -1
 	}
 	deltas := make([]delta, 0)
 	d := delta{direction, 0}
-	c := moveDelta(p.coord, d)
+	c := moveDelta(p.Coord, d)
 	targetPiece := pieceAtCoordinate(board, c)
 	if isValidCoordinate(c) && targetPiece < 0 {
 		deltas = append(deltas, d)
 
-		if (p.color == black && p.coord.row == 1) || (p.color == white && p.coord.row == 6) {
+		if (p.Color == black && p.Coord.Row == 1) || (p.Color == white && p.Coord.Row == 6) {
 			d = delta{direction * 2, 0}
-			c = moveDelta(p.coord, d)
+			c = moveDelta(p.Coord, d)
 			targetPiece = pieceAtCoordinate(board, c)
 			if isValidCoordinate(c) && targetPiece < 0 {
 				deltas = append(deltas, d)
@@ -23,46 +23,46 @@ func pawnMoves(board board, pi int) []move {
 		}
 	}
 
-	if (p.color == black && p.coord.row == 1) || (p.color == white && p.coord.row == boardSize-2) {
+	if (p.Color == black && p.Coord.Row == 1) || (p.Color == white && p.Coord.Row == boardSize-2) {
 		deltas = append(deltas, delta{direction * 2, 0})
 	}
-	if p.coord.row+direction >= 0 && p.coord.row+direction < boardSize {
-		if p.coord.col-1 >= 0 {
+	if p.Coord.Row+direction >= 0 && p.Coord.Row+direction < boardSize {
+		if p.Coord.Col-1 >= 0 {
 			d := delta{direction, -1}
-			c1 := moveDelta(p.coord, d)
+			c1 := moveDelta(p.Coord, d)
 			targetPiece := pieceAtCoordinate(board, c1)
-			if targetPiece >= 0 && board[targetPiece].color != p.color {
+			if targetPiece >= 0 && board[targetPiece].Color != p.Color {
 				deltas = append(deltas, d)
 			}
 		}
-		if p.coord.col+1 < 8 {
+		if p.Coord.Col+1 < 8 {
 			d := delta{direction, 1}
-			c1 := moveDelta(p.coord, d)
+			c1 := moveDelta(p.Coord, d)
 			targetPiece := pieceAtCoordinate(board, c1)
-			if targetPiece >= 0 && board[targetPiece].color != p.color {
+			if targetPiece >= 0 && board[targetPiece].Color != p.Color {
 				deltas = append(deltas, d)
 			}
 		}
 	}
-	moves := make([]move, 0)
+	moves := make([]Move, 0)
 	for _, d := range deltas {
-		targetCoord := coordinate{
-			row: p.coord.row + d.dr,
-			col: p.coord.col + d.dc,
+		targetCoord := Coordinate{
+			Row: p.Coord.Row + d.dr,
+			Col: p.Coord.Col + d.dc,
 		}
 		targetPiece := pieceAtCoordinate(board, targetCoord)
-		if targetPiece < 0 || board[targetPiece].color != p.color {
-			moves = append(moves, move{
-				mover: pi,
-				coord: targetCoord,
-				steal: targetPiece,
+		if targetPiece < 0 || board[targetPiece].Color != p.Color {
+			moves = append(moves, Move{
+				Mover: pi,
+				Coord: targetCoord,
+				Steal: targetPiece,
 			})
 		}
 	}
 	return moves
 }
 
-func rookMoves(board board, pi int) []move {
+func rookMoves(board Board, pi int) []Move {
 	deltas := []delta{
 		{1, 0},
 		{-1, 0},
@@ -72,7 +72,7 @@ func rookMoves(board board, pi int) []move {
 	return searchDirections(board, pi, deltas)
 }
 
-func knightMoves(board board, pi int) []move {
+func knightMoves(board Board, pi int) []Move {
 	deltas := []delta{
 		{2, 1},
 		{1, 2},
@@ -86,7 +86,7 @@ func knightMoves(board board, pi int) []move {
 	return searchDeltas(board, pi, deltas)
 }
 
-func bishopMoves(board board, pi int) []move {
+func bishopMoves(board Board, pi int) []Move {
 	deltas := []delta{
 		{1, 1},
 		{-1, -1},
@@ -96,7 +96,7 @@ func bishopMoves(board board, pi int) []move {
 	return searchDirections(board, pi, deltas)
 }
 
-func queenMoves(board board, pi int) []move {
+func queenMoves(board Board, pi int) []Move {
 	deltas := []delta{
 		{1, 0},
 		{-1, 0},
@@ -110,7 +110,7 @@ func queenMoves(board board, pi int) []move {
 	return searchDirections(board, pi, deltas)
 }
 
-func kingMoves(board board, pi int) []move {
+func kingMoves(board Board, pi int) []Move {
 	deltas := []delta{
 		{1, 0},
 		{-1, 0},
@@ -124,10 +124,10 @@ func kingMoves(board board, pi int) []move {
 	return searchDeltas(board, pi, deltas)
 }
 
-func pieceAtCoordinate(board board, coord coordinate) int {
+func pieceAtCoordinate(board Board, coord Coordinate) int {
 	for i := range board {
 		p := &board[i]
-		if p.coord.row == coord.row && p.coord.col == coord.col && !p.stolen {
+		if p.Coord.Row == coord.Row && p.Coord.Col == coord.Col && !p.Stolen {
 			return i
 		}
 	}
@@ -141,15 +141,15 @@ func extendDelta(d delta, a int) delta {
 	}
 }
 
-func moveDelta(c coordinate, d delta) coordinate {
-	return coordinate{
-		row: c.row + d.dr,
-		col: c.col + d.dc,
+func moveDelta(c Coordinate, d delta) Coordinate {
+	return Coordinate{
+		Row: c.Row + d.dr,
+		Col: c.Col + d.dc,
 	}
 }
 
-func isValidCoordinate(c coordinate) bool {
-	return c.row >= 0 && c.row < boardSize && c.col >= 0 && c.col < boardSize
+func isValidCoordinate(c Coordinate) bool {
+	return c.Row >= 0 && c.Row < boardSize && c.Col >= 0 && c.Col < boardSize
 }
 
 func intInArray(a []int, i int) bool {
@@ -161,9 +161,9 @@ func intInArray(a []int, i int) bool {
 	return false
 }
 
-func searchDirections(board board, pi int, deltas []delta) []move {
+func searchDirections(board Board, pi int, deltas []delta) []Move {
 	p := board[pi]
-	moves := make([]move, 0)
+	moves := make([]Move, 0)
 	skipDeltas := make([]int, 0)
 	for c := 0; c < boardSize; c++ {
 		deltas1 := make([]delta, len(deltas))
@@ -172,14 +172,14 @@ func searchDirections(board board, pi int, deltas []delta) []move {
 		}
 		for i, d := range deltas1 {
 			if !intInArray(skipDeltas, i) {
-				targetCoord := moveDelta(p.coord, d)
+				targetCoord := moveDelta(p.Coord, d)
 				if isValidCoordinate(targetCoord) {
 					targetPiece := pieceAtCoordinate(board, targetCoord)
-					if targetPiece < 0 || board[targetPiece].color != p.color {
-						moves = append(moves, move{
-							mover: pi,
-							coord: targetCoord,
-							steal: targetPiece,
+					if targetPiece < 0 || board[targetPiece].Color != p.Color {
+						moves = append(moves, Move{
+							Mover: pi,
+							Coord: targetCoord,
+							Steal: targetPiece,
 						})
 					}
 					if targetPiece >= 0 {
@@ -192,18 +192,18 @@ func searchDirections(board board, pi int, deltas []delta) []move {
 	return moves
 }
 
-func searchDeltas(board board, pi int, deltas []delta) []move {
+func searchDeltas(board Board, pi int, deltas []delta) []Move {
 	p := board[pi]
-	moves := make([]move, 0)
+	moves := make([]Move, 0)
 	for _, d := range deltas {
-		targetCoord := moveDelta(p.coord, d)
+		targetCoord := moveDelta(p.Coord, d)
 		if isValidCoordinate(targetCoord) {
 			targetPiece := pieceAtCoordinate(board, targetCoord)
-			if targetPiece < 0 || board[targetPiece].color != p.color {
-				moves = append(moves, move{
-					mover: pi,
-					coord: targetCoord,
-					steal: targetPiece,
+			if targetPiece < 0 || board[targetPiece].Color != p.Color {
+				moves = append(moves, Move{
+					Mover: pi,
+					Coord: targetCoord,
+					Steal: targetPiece,
 				})
 			}
 		}

@@ -5,20 +5,20 @@ import (
 	"strings"
 )
 
-func (m move) string(b board) string {
-	str := fmt.Sprintf("%s from %s to %s", b[m.mover].string(), b[m.mover].coord.string(), m.coord.string())
-	if m.steal >= 0 {
-		str += fmt.Sprintf(" (takes %s)", b[m.steal].string())
+func (m Move) string(b Board) string {
+	str := fmt.Sprintf("%s from %s to %s", b[m.Mover].string(), b[m.Mover].Coord.string(), m.Coord.string())
+	if m.Steal >= 0 {
+		str += fmt.Sprintf(" (takes %s)", b[m.Steal].string())
 	}
 	return str
 }
 
-func (b board) string() string {
+func (b Board) string() string {
 	rows := make([]string, boardSize)
 	for r := 0; r < boardSize; r++ {
 		cols := make([]string, boardSize)
 		for c := 0; c < boardSize; c++ {
-			p := pieceAtCoordinate(b, coordinate{row: r, col: c})
+			p := pieceAtCoordinate(b, Coordinate{Row: r, Col: c})
 			if p >= 0 {
 				cols[c] = b[p].string()
 			} else {
@@ -30,11 +30,11 @@ func (b board) string() string {
 	return strings.Join(rows, "\n")
 }
 
-func (c coordinate) string() string {
-	return fmt.Sprintf("%d,%d", c.col, c.row)
+func (c Coordinate) string() string {
+	return fmt.Sprintf("%d,%d", c.Col, c.Row)
 }
 
-func (c color) string() string {
+func (c Color) string() string {
 	switch c {
 	case white:
 		return "white"
@@ -45,10 +45,10 @@ func (c color) string() string {
 	}
 }
 
-func (p piece) string() string {
-	switch p.color {
+func (p Piece) string() string {
+	switch p.Color {
 	case white:
-		switch p.rank {
+		switch p.Rank {
 		case pawn:
 			return "♟︎"
 		case rook:
@@ -65,7 +65,7 @@ func (p piece) string() string {
 			return ""
 		}
 	case black:
-		switch p.rank {
+		switch p.Rank {
 		case pawn:
 			return "♙"
 		case rook:

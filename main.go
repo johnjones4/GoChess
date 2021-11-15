@@ -7,14 +7,14 @@ import (
 )
 
 func main() {
-	wins := map[color]int{
+	wins := map[Color]int{
 		white: 0,
 		black: 0,
 	}
 	rand.Seed(time.Now().Unix())
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		fmt.Println(i)
-		g := newGame()
+		g := NewGame()
 		winner := g.run()
 		wins[winner]++
 	}

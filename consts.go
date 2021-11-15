@@ -5,20 +5,20 @@ const (
 )
 
 const (
-	white color = 1
-	black color = 2
+	white Color = 1
+	black Color = 2
 )
 
 const (
-	pawn   rank = 1
-	rook   rank = 2
-	knight rank = 3
-	bishop rank = 4
-	queen  rank = 5
-	king   rank = 6
+	pawn   Rank = 1
+	rook   Rank = 2
+	knight Rank = 3
+	bishop Rank = 4
+	queen  Rank = 5
+	king   Rank = 6
 )
 
-var lineUp = []rank{
+var lineUp = []Rank{
 	rook,
 	knight,
 	bishop,

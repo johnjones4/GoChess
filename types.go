@@ -1,25 +1,25 @@
 package main
 
-type color int
+type Color int
 
-type rank int
+type Rank int
 
-type piece struct {
-	color  color
-	rank   rank
-	coord  coordinate
-	stolen bool
+type Piece struct {
+	Color  Color      `json:"color"`
+	Rank   Rank       `json:"rank"`
+	Coord  Coordinate `json:"coord"`
+	Stolen bool       `json:"stolen"`
 }
 
-type coordinate struct {
-	row int
-	col int
+type Coordinate struct {
+	Row int `json:"row"`
+	Col int `json:"col"`
 }
 
-type move struct {
-	mover int
-	coord coordinate
-	steal int
+type Move struct {
+	Mover int        `json:"mover"`
+	Coord Coordinate `json:"coord"`
+	Steal int        `json:"steal"`
 }
 
 type delta struct {
@@ -27,20 +27,19 @@ type delta struct {
 	dc int
 }
 
-type board []piece
+type Board []Piece
 
-type game struct {
-	board board
-	turn  int
+type Game struct {
+	Board Board
+	Turn  int
 }
 
-type node struct {
-	board      board
-	children   map[move]node
-	isOpponent bool
-	player     color
-	isLeaf     bool
-	value      int
-	edge       *move
-	parent     *board
+type Node struct {
+	Board      Board
+	Edge       *Move
+	Children   []Node
+	IsOpponent bool
+	Player     Color
+	IsLeaf     bool
+	Value      int
 }

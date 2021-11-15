@@ -1,31 +1,31 @@
 package main
 
-func (b board) doMove(m move) board {
-	if b[m.mover].stolen {
+func (b Board) doMove(m Move) Board {
+	if b[m.Mover].Stolen {
 		panic("cannot move a stolen piece!")
 	}
-	if m.steal >= 0 && b[m.steal].stolen {
+	if m.Steal >= 0 && b[m.Steal].Stolen {
 		panic("cannot steal a stolen piece!")
 	}
 	b1 := b.copy()
-	b1[m.mover].coord = m.coord
-	if m.steal >= 0 {
-		b1[m.steal].stolen = true
+	b1[m.Mover].Coord = m.Coord
+	if m.Steal >= 0 {
+		b1[m.Steal].Stolen = true
 	}
 	return b1
 }
 
-func (b board) copy() board {
-	b1 := make(board, boardSize*4)
+func (b Board) copy() Board {
+	b1 := make(Board, boardSize*4)
 	copy(b1, b)
 	return b1
 }
 
-func (board board) moves(c color) []move {
-	moves := make([]move, 0)
+func (board Board) moves(c Color) []Move {
+	moves := make([]Move, 0)
 	for i, p := range board {
-		if p.color == c && !p.stolen {
-			switch p.rank {
+		if p.Color == c && !p.Stolen {
+			switch p.Rank {
 			case pawn:
 				moves = append(moves, pawnMoves(board, i)...)
 			case rook:

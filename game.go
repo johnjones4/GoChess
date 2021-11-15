@@ -1,82 +1,82 @@
 package main
 
-func newGame() game {
-	g := game{
-		board: make(board, boardSize*4),
-		turn:  0,
+func NewGame() Game {
+	g := Game{
+		Board: make(Board, boardSize*4),
+		Turn:  0,
 	}
 	j := 0
 	for i := 0; i < boardSize; i++ {
-		g.board[j] = piece{
-			color: white,
-			rank:  pawn,
-			coord: coordinate{
-				row: 6,
-				col: i,
+		g.Board[j] = Piece{
+			Color: white,
+			Rank:  pawn,
+			Coord: Coordinate{
+				Row: 6,
+				Col: i,
 			},
-			stolen: false,
+			Stolen: false,
 		}
 		j++
 
-		g.board[j] = piece{
-			color: white,
-			rank:  lineUp[i],
-			coord: coordinate{
-				row: 7,
-				col: i,
+		g.Board[j] = Piece{
+			Color: white,
+			Rank:  lineUp[i],
+			Coord: Coordinate{
+				Row: 7,
+				Col: i,
 			},
-			stolen: false,
+			Stolen: false,
 		}
 		j++
 
-		g.board[j] = piece{
-			color: black,
-			rank:  pawn,
-			coord: coordinate{
-				row: 1,
-				col: i,
+		g.Board[j] = Piece{
+			Color: black,
+			Rank:  pawn,
+			Coord: Coordinate{
+				Row: 1,
+				Col: i,
 			},
-			stolen: false,
+			Stolen: false,
 		}
 		j++
 
-		g.board[j] = piece{
-			color: black,
-			rank:  lineUp[i],
-			coord: coordinate{
-				row: 0,
-				col: i,
+		g.Board[j] = Piece{
+			Color: black,
+			Rank:  lineUp[i],
+			Coord: Coordinate{
+				Row: 0,
+				Col: i,
 			},
-			stolen: false,
+			Stolen: false,
 		}
 		j++
 	}
 	return g
 }
 
-func (g *game) nextTurn(c color) bool {
-	var move move
+func (g *Game) nextTurn(c Color) bool {
+	var move Move
 	if c == black {
-		move = bestMinimaxMove(g.board, c)
+		move = bestMinimaxMove(g.Board, c)
 	} else {
-		move = randomMove(g.board, c)
+		move = randomMove(g.Board, c)
 	}
-	g.board = g.board.doMove(move)
-	if move.steal >= 0 {
-		if g.board[move.steal].rank == king {
+	g.Board = g.Board.doMove(move)
+	if move.Steal >= 0 {
+		if g.Board[move.Steal].Rank == king {
 			return true
 		}
 	}
 	return false
 }
 
-func (g *game) run() color {
-	turns := []color{white, black}
+func (g *Game) run() Color {
+	turns := []Color{white, black}
 	for {
-		t := turns[g.turn%len(turns)]
+		t := turns[g.Turn%len(turns)]
 		if g.nextTurn(t) {
 			return t
 		}
-		g.turn++
+		g.Turn++
 	}
 }
