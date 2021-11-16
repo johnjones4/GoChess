@@ -38,7 +38,9 @@ type MoveArgs struct {
 func (s *SessionManager) Move(args MoveArgs, game *chess.Game) error {
 	if g, ok := s.Games[args.Session]; ok {
 		*game = g
-		//TODO validate move
+		if !game.Board.MoveIsValid(game.UserPlayer, args.Move) {
+			return errors.New("move is illegal")
+		}
 		if !game.TakeTurn(args.Move) {
 			game.TakeComputerTurn()
 		}

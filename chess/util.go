@@ -27,3 +27,7 @@ func opposite(c Color) Color {
 	}
 	return White
 }
+
+func coordsEqual(a, b Coordinate) bool {
+	return a.Row == b.Row && a.Col == b.Col
+}

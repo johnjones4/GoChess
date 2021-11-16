@@ -35,6 +35,9 @@ func (board Board) moves(c Color) []Move {
 }
 
 func (board Board) MovesForPiece(i int) ([]Move, error) {
+	if i >= len(board) {
+		return nil, errors.New("illegal piece index")
+	}
 	p := board[i]
 	if p.Stolen {
 		return nil, errors.New("cannot move stolen piece")
@@ -55,4 +58,24 @@ func (board Board) MovesForPiece(i int) ([]Move, error) {
 	default:
 		return nil, errors.New("bad rank")
 	}
+}
+
+func (board Board) MoveIsValid(color Color, move Move) bool {
+	if move.Mover >= len(board) {
+		return false
+	}
+	p := board[move.Mover]
+	if p.Color != color {
+		return false
+	}
+	moves, err := board.MovesForPiece(move.Mover)
+	if err != nil {
+		return false
+	}
+	for _, m := range moves {
+		if coordsEqual(m.Coord, move.Coord) && m.Mover == move.Mover && m.Steal == move.Steal {
+			return true
+		}
+	}
+	return false
 }
