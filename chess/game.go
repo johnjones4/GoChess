@@ -1,14 +1,16 @@
-package main
+package chess
 
-func NewGame() Game {
+func NewGame(userPlayer Color) Game {
 	g := Game{
-		Board: make(Board, boardSize*4),
-		Turn:  0,
+		Board:      make(Board, boardSize*4),
+		Turn:       0,
+		UserPlayer: userPlayer,
+		Winner:     -1,
 	}
 	j := 0
 	for i := 0; i < boardSize; i++ {
 		g.Board[j] = Piece{
-			Color: white,
+			Color: White,
 			Rank:  pawn,
 			Coord: Coordinate{
 				Row: 6,
@@ -19,7 +21,7 @@ func NewGame() Game {
 		j++
 
 		g.Board[j] = Piece{
-			Color: white,
+			Color: White,
 			Rank:  lineUp[i],
 			Coord: Coordinate{
 				Row: 7,
@@ -30,7 +32,7 @@ func NewGame() Game {
 		j++
 
 		g.Board[j] = Piece{
-			Color: black,
+			Color: Black,
 			Rank:  pawn,
 			Coord: Coordinate{
 				Row: 1,
@@ -41,7 +43,7 @@ func NewGame() Game {
 		j++
 
 		g.Board[j] = Piece{
-			Color: black,
+			Color: Black,
 			Rank:  lineUp[i],
 			Coord: Coordinate{
 				Row: 0,
@@ -54,29 +56,19 @@ func NewGame() Game {
 	return g
 }
 
-func (g *Game) nextTurn(c Color) bool {
-	var move Move
-	if c == black {
-		move = bestMinimaxMove(g.Board, c)
-	} else {
-		move = randomMove(g.Board, c)
-	}
+func (g *Game) TakeComputerTurn() bool {
+	move := bestMinimaxMove(g.Board, opposite(g.UserPlayer))
+	return g.TakeTurn(move)
+}
+
+func (g *Game) TakeTurn(move Move) bool {
 	g.Board = g.Board.doMove(move)
 	if move.Steal >= 0 {
 		if g.Board[move.Steal].Rank == king {
+			g.Winner = g.Board[move.Mover].Color
 			return true
 		}
 	}
+	g.Turn++
 	return false
-}
-
-func (g *Game) run() Color {
-	turns := []Color{white, black}
-	for {
-		t := turns[g.Turn%len(turns)]
-		if g.nextTurn(t) {
-			return t
-		}
-		g.Turn++
-	}
 }

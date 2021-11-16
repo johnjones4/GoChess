@@ -1,9 +1,9 @@
-package main
+package chess
 
 func pawnMoves(board Board, pi int) []Move {
 	p := board[pi]
 	direction := 1
-	if p.Color == white {
+	if p.Color == White {
 		direction = -1
 	}
 	deltas := make([]delta, 0)
@@ -13,7 +13,7 @@ func pawnMoves(board Board, pi int) []Move {
 	if isValidCoordinate(c) && targetPiece < 0 {
 		deltas = append(deltas, d)
 
-		if (p.Color == black && p.Coord.Row == 1) || (p.Color == white && p.Coord.Row == 6) {
+		if (p.Color == Black && p.Coord.Row == 1) || (p.Color == White && p.Coord.Row == 6) {
 			d = delta{direction * 2, 0}
 			c = moveDelta(p.Coord, d)
 			targetPiece = pieceAtCoordinate(board, c)
@@ -23,7 +23,7 @@ func pawnMoves(board Board, pi int) []Move {
 		}
 	}
 
-	if (p.Color == black && p.Coord.Row == 1) || (p.Color == white && p.Coord.Row == boardSize-2) {
+	if (p.Color == Black && p.Coord.Row == 1) || (p.Color == White && p.Coord.Row == boardSize-2) {
 		deltas = append(deltas, delta{direction * 2, 0})
 	}
 	if p.Coord.Row+direction >= 0 && p.Coord.Row+direction < boardSize {

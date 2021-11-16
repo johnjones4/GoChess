@@ -1,4 +1,4 @@
-package main
+package chess
 
 type Color int
 
@@ -30,11 +30,14 @@ type delta struct {
 type Board []Piece
 
 type Game struct {
-	Board Board
-	Turn  int
+	Board      Board `json:"board"`
+	Turn       int   `json:"turn"`
+	UserPlayer Color `json:"userPlayer"`
+	Winner     Color `json:"winner"`
 }
 
 type Node struct {
+	Depth      int
 	Board      Board
 	Edge       *Move
 	Children   []Node

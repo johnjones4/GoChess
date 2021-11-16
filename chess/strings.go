@@ -1,26 +1,26 @@
-package main
+package chess
 
 import (
 	"fmt"
 	"strings"
 )
 
-func (m Move) string(b Board) string {
-	str := fmt.Sprintf("%s from %s to %s", b[m.Mover].string(), b[m.Mover].Coord.string(), m.Coord.string())
+func (m Move) String(b Board) string {
+	str := fmt.Sprintf("%s from %s to %s", b[m.Mover].String(), b[m.Mover].Coord.String(), m.Coord.String())
 	if m.Steal >= 0 {
-		str += fmt.Sprintf(" (takes %s)", b[m.Steal].string())
+		str += fmt.Sprintf(" (takes %s)", b[m.Steal].String())
 	}
 	return str
 }
 
-func (b Board) string() string {
+func (b Board) String() string {
 	rows := make([]string, boardSize)
 	for r := 0; r < boardSize; r++ {
 		cols := make([]string, boardSize)
 		for c := 0; c < boardSize; c++ {
 			p := pieceAtCoordinate(b, Coordinate{Row: r, Col: c})
 			if p >= 0 {
-				cols[c] = b[p].string()
+				cols[c] = b[p].String()
 			} else {
 				cols[c] = " "
 			}
@@ -30,24 +30,24 @@ func (b Board) string() string {
 	return strings.Join(rows, "\n")
 }
 
-func (c Coordinate) string() string {
+func (c Coordinate) String() string {
 	return fmt.Sprintf("%d,%d", c.Col, c.Row)
 }
 
-func (c Color) string() string {
+func (c Color) String() string {
 	switch c {
-	case white:
-		return "white"
-	case black:
-		return "black"
+	case White:
+		return "White"
+	case Black:
+		return "Black"
 	default:
 		return ""
 	}
 }
 
-func (p Piece) string() string {
+func (p Piece) String() string {
 	switch p.Color {
-	case white:
+	case White:
 		switch p.Rank {
 		case pawn:
 			return "♟︎"
@@ -64,7 +64,7 @@ func (p Piece) string() string {
 		default:
 			return ""
 		}
-	case black:
+	case Black:
 		switch p.Rank {
 		case pawn:
 			return "♙"

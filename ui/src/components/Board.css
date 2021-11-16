@@ -1,0 +1,57 @@
+.Board {
+  width: 800px;
+  height: 800px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.Board button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 50px;
+}
+
+.Board button:enabled {
+  border: 1px solid blue;
+}
+
+.Board button:enabled:hover {
+  border: 1px solid red;
+}
+
+.Board button:nth-child(2),
+.Board button:nth-child(4),
+.Board button:nth-child(6),
+.Board button:nth-child(8),
+.Board button:nth-child(9),
+.Board button:nth-child(11),
+.Board button:nth-child(13),
+.Board button:nth-child(15),
+.Board button:nth-child(18),
+.Board button:nth-child(20),
+.Board button:nth-child(22),
+.Board button:nth-child(24),
+.Board button:nth-child(25),
+.Board button:nth-child(27),
+.Board button:nth-child(29),
+.Board button:nth-child(31),
+.Board button:nth-child(34),
+.Board button:nth-child(36),
+.Board button:nth-child(38),
+.Board button:nth-child(40),
+.Board button:nth-child(41),
+.Board button:nth-child(43),
+.Board button:nth-child(45),
+.Board button:nth-child(47),
+.Board button:nth-child(50),
+.Board button:nth-child(52),
+.Board button:nth-child(54),
+.Board button:nth-child(56),
+.Board button:nth-child(57),
+.Board button:nth-child(59),
+.Board button:nth-child(61),
+.Board button:nth-child(63) {
+  background: gray;
+}

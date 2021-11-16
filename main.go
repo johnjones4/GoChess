@@ -1,24 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"math/rand"
-	"time"
-)
+import "main/clientserver"
 
 func main() {
-	wins := map[Color]int{
-		white: 0,
-		black: 0,
-	}
-	rand.Seed(time.Now().Unix())
-	for i := 0; i < 100; i++ {
-		fmt.Println(i)
-		g := NewGame()
-		winner := g.run()
-		wins[winner]++
-	}
-	for player, wins := range wins {
-		fmt.Printf("%s: %d\n", player.string(), wins)
-	}
+	clientserver.StartServer(":8080")
 }

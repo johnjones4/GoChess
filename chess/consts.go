@@ -1,12 +1,12 @@
-package main
+package chess
 
 const (
 	boardSize = 8
 )
 
 const (
-	white Color = 1
-	black Color = 2
+	White Color = 1
+	Black Color = 2
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 	knight Rank = 3
 	bishop Rank = 4
 	queen  Rank = 5
-	king   Rank = 6
+	king   Rank = 10
 )
 
 var lineUp = []Rank{
@@ -28,3 +28,8 @@ var lineUp = []Rank{
 	knight,
 	rook,
 }
+
+const (
+	maxInt = 10000000
+	minInt = -10000000
+)
