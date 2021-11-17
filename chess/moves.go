@@ -165,7 +165,7 @@ func searchDirections(board Board, pi int, deltas []delta) []Move {
 	p := board[pi]
 	moves := make([]Move, 0)
 	skipDeltas := make([]int, 0)
-	for c := 0; c < boardSize; c++ {
+	for c := 1; c < boardSize; c++ {
 		deltas1 := make([]delta, len(deltas))
 		for i, d := range deltas {
 			deltas1[i] = extendDelta(d, c)

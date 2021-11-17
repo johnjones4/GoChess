@@ -57,7 +57,7 @@ func NewGame(userPlayer Color) Game {
 }
 
 func (g *Game) TakeComputerTurn() bool {
-	move := startMinimaxRemote(g.Board, opposite(g.UserPlayer))
+	move := startMinimaxLocal(g.Board, opposite(g.UserPlayer))
 	return g.TakeTurn(move)
 }
 

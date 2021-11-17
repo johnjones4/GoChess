@@ -27,7 +27,7 @@ func startMinimaxRemote(b Board, c Color) Move {
 
 func minimaxRemote(wg *sync.WaitGroup, n Node, maxDepth int, result *int) {
 	wg.Add(1)
-	_, v := minimaxLocal(n, minInt, maxInt, maxDepth)
-	*result = v
+	node := minimaxLocal(&n, minInt, maxInt, maxDepth)
+	*result = node.Value
 	wg.Done()
 }

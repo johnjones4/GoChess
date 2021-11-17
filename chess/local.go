@@ -1,52 +1,63 @@
 package chess
 
+import "fmt"
+
 func startMinimaxLocal(b Board, c Color) Move {
 	root := newNode(&b, nil, 0, c, false)
-	move, _ := minimaxLocal(root, minInt, maxInt, 3)
-	return move
+	node := minimaxLocal(&root, minInt, maxInt, 2)
+	fmt.Println(root.string())
+	return *node.Edge
 }
 
-func minimaxLocal(n Node, alpha, beta int, maxDepth int) (Move, int) {
-	n.nextLevel(n.Depth + 1)
+func minimaxLocal(n *Node, alpha, beta int, maxDepth int) *Node {
+	if !n.IsLeaf && n.Depth != maxDepth {
+		n.nextLevel(n.Depth + 1)
+	}
 	if n.IsLeaf || n.Depth == maxDepth {
 		n.evaluate()
-		return Move{}, n.Value
+		return nil
 	}
 	if !n.IsOpponent {
-		v := minInt
-		var m *Move = nil
-		for _, child := range n.Children {
-			_, v1 := minimaxLocal(child, alpha, beta, maxDepth)
-			if v1 > v {
-				v = v1
-				m = child.Edge
+		var bestNode *Node = nil
+		for i := range n.Children {
+			child := &n.Children[i]
+			bestGrandchild := minimaxLocal(child, alpha, beta, maxDepth)
+			if bestGrandchild != nil {
+				child.Value = bestGrandchild.Value
 			}
-			if v >= beta {
+			if bestNode == nil || child.Value >= bestNode.Value {
+				bestNode = child
+			}
+			if bestNode.Value >= beta {
 				break
 			}
-			alpha = max(alpha, v)
+			alpha = max(alpha, bestNode.Value)
 		}
-		if m == nil {
+		if bestNode == nil {
 			panic("no move")
 		}
-		return *m, v
+		n.Value = bestNode.Value
+		return bestNode
 	} else {
-		v := maxInt
-		var m *Move = nil
-		for _, child := range n.Children {
-			_, v1 := minimaxLocal(child, alpha, beta, maxDepth)
-			if v1 < v {
-				v = v1
-				m = child.Edge
+		var bestNode *Node = nil
+		for i := range n.Children {
+			child := &n.Children[i]
+			bestGrandchild := minimaxLocal(child, alpha, beta, maxDepth)
+			if bestGrandchild != nil {
+				child.Value = bestGrandchild.Value
 			}
-			if v <= alpha {
+			if bestNode == nil || child.Value <= bestNode.Value {
+				bestNode = child
+			}
+			if bestNode.Value <= alpha {
 				break
 			}
-			beta = min(beta, v)
+			beta = min(beta, bestNode.Value)
 		}
-		if m == nil {
+		if bestNode == nil {
 			panic("no move")
 		}
-		return *m, v
+		n.Value = bestNode.Value
+		return bestNode
 	}
 }
