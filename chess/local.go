@@ -4,60 +4,59 @@ import "fmt"
 
 func startMinimaxLocal(b Board, c Color) Move {
 	root := newNode(&b, nil, 0, c, false)
-	node := minimaxLocal(&root, minInt, maxInt, 2)
+	root.build(2)
 	fmt.Println(root.string())
+	node, _ := minimaxLocal(&root, minInt, maxInt, 2)
 	return *node.Edge
 }
 
-func minimaxLocal(n *Node, alpha, beta int, maxDepth int) *Node {
+func minimaxLocal(n *Node, alpha, beta int, maxDepth int) (*Node, int) {
 	if !n.IsLeaf && n.Depth != maxDepth {
-		n.nextLevel(n.Depth + 1)
+		n.nextLevel()
 	}
 	if n.IsLeaf || n.Depth == maxDepth {
 		n.evaluate()
-		return nil
+		return nil, n.Value
 	}
 	if !n.IsOpponent {
-		var bestNode *Node = nil
+		bestV := minInt
+		var bestChild *Node = nil
 		for i := range n.Children {
 			child := &n.Children[i]
-			bestGrandchild := minimaxLocal(child, alpha, beta, maxDepth)
-			if bestGrandchild != nil {
-				child.Value = bestGrandchild.Value
+			_, v := minimaxLocal(child, alpha, beta, maxDepth)
+			if bestChild == nil || v >= bestV {
+				bestChild = child
+				bestV = v
 			}
-			if bestNode == nil || child.Value >= bestNode.Value {
-				bestNode = child
-			}
-			if bestNode.Value >= beta {
+			if bestV >= beta {
 				break
 			}
-			alpha = max(alpha, bestNode.Value)
+			alpha = max(alpha, bestV)
 		}
-		if bestNode == nil {
+		if bestChild == nil {
 			panic("no move")
 		}
-		n.Value = bestNode.Value
-		return bestNode
+		n.Value = bestV
+		return bestChild, bestV
 	} else {
-		var bestNode *Node = nil
+		var worstChild *Node = nil
+		var worstV = maxInt
 		for i := range n.Children {
 			child := &n.Children[i]
-			bestGrandchild := minimaxLocal(child, alpha, beta, maxDepth)
-			if bestGrandchild != nil {
-				child.Value = bestGrandchild.Value
+			_, v := minimaxLocal(child, alpha, beta, maxDepth)
+			if worstChild == nil || v <= worstV {
+				worstV = v
+				worstChild = child
 			}
-			if bestNode == nil || child.Value <= bestNode.Value {
-				bestNode = child
-			}
-			if bestNode.Value <= alpha {
+			if worstV <= alpha {
 				break
 			}
-			beta = min(beta, bestNode.Value)
+			beta = min(beta, worstV)
 		}
-		if bestNode == nil {
+		if worstChild == nil {
 			panic("no move")
 		}
-		n.Value = bestNode.Value
-		return bestNode
+		n.Value = worstV
+		return worstChild, worstV
 	}
 }

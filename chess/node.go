@@ -41,8 +41,8 @@ func (n *Node) evaluate() {
 		}
 	}
 	for _, p := range n.Board {
-		if p.Color != n.Player && p.Stolen {
-			n.Value += (int(p.Rank) ^ 2)
+		if p.Color == n.Player && !p.Stolen {
+			n.Value += 1 //(int(p.Rank) ^ 2)
 		}
 	}
 	if n.IsOpponent {
@@ -50,15 +50,32 @@ func (n *Node) evaluate() {
 	}
 }
 
-func (n *Node) nextLevel(depth int) {
+func (n *Node) nextLevel() {
 	if n.IsLeaf {
 		return
 	}
 	moves := n.Board.moves(n.Player)
+	if n.Depth == 1 {
+		for _, m := range moves {
+			fmt.Println(m.String(n.Board))
+		}
+		fmt.Println("")
+		// fmt.Println(moves)
+	}
 	n.Children = make([]Node, len(moves))
 	n.IsLeaf = len(moves) == 0
 	for i, m := range moves {
-		n.Children[i] = newNode(&n.Board, &m, depth, opposite(n.Player), !n.IsOpponent)
+		n.Children[i] = newNode(&n.Board, &m, n.Depth+1, opposite(n.Player), !n.IsOpponent)
+	}
+}
+
+func (n *Node) build(toDepth int) {
+	if n.Depth == toDepth {
+		return
+	}
+	n.nextLevel()
+	for i := range n.Children {
+		n.Children[i].build(toDepth)
 	}
 }
 
