@@ -1,12 +1,8 @@
 package chess
 
-import "fmt"
-
 func startMinimaxLocal(b Board, c Color) Move {
-	root := newNode(&b, nil, 0, c, false)
-	root.build(2)
-	fmt.Println(root.string())
-	node, _ := minimaxLocal(&root, minInt, maxInt, 2)
+	root := newNode(nil, b, nil, 0, c, false)
+	node, _ := minimaxLocal(&root, minInt, maxInt, 6)
 	return *node.Edge
 }
 

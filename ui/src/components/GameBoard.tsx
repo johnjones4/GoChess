@@ -3,6 +3,8 @@ import { Color, Method } from '../util/consts'
 import JSONRPC from '../util/JSONRPC'
 import { Game, GameArgs, GameResponse, GetMoveArgs, GetMoveResponse, Move, MoveArgs } from '../util/types'
 import Board from './Board'
+import './GameBoard.css'
+import GameLog from './GameLog'
 
 interface GameProps {
 
@@ -41,17 +43,20 @@ export default class GameBoard extends Component<GameProps, GameState> {
 
   render() {
     return this.state.game && (
-      <Board
-        game={this.state.game}
-        onMove={ async (move: Move) => {
-          const game = await this.rpc.call<MoveArgs, Game>(Method.Move, {session: this.state.session as string, move})
-          this.setState({game})
-        }}
-        onSelection={ async (piece: number) : Promise<Move[]> => {
-          const resp = await this.rpc.call<GetMoveArgs, GetMoveResponse>(Method.GetMoves, {session: this.state.session as string, piece})
-          return resp.moves
-        }}
-      />
+      <div className='GameBoard'>
+        <Board
+          game={this.state.game}
+          onMove={ async (move: Move) => {
+            const game = await this.rpc.call<MoveArgs, Game>(Method.Move, {session: this.state.session as string, move})
+            this.setState({game})
+          }}
+          onSelection={ async (piece: number) : Promise<Move[]> => {
+            const resp = await this.rpc.call<GetMoveArgs, GetMoveResponse>(Method.GetMoves, {session: this.state.session as string, piece})
+            return resp.moves
+          }}
+        />
+        <GameLog game={this.state.game} />
+      </div>
     )
   }
 }

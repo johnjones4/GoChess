@@ -6,6 +6,7 @@ func NewGame(userPlayer Color) Game {
 		Turn:       0,
 		UserPlayer: userPlayer,
 		Winner:     -1,
+		Log:        make([]LogItem, 0),
 	}
 	j := 0
 	for i := 0; i < boardSize; i++ {
@@ -57,11 +58,15 @@ func NewGame(userPlayer Color) Game {
 }
 
 func (g *Game) TakeComputerTurn() bool {
-	move := startMinimaxLocal(g.Board, opposite(g.UserPlayer))
+	move := startMinimaxRemote(g.Board, opposite(g.UserPlayer))
 	return g.TakeTurn(move)
 }
 
 func (g *Game) TakeTurn(move Move) bool {
+	g.Log = append(g.Log, LogItem{
+		Board: g.Board.copy(),
+		Move:  move,
+	})
 	g.Board = g.Board.doMove(move)
 	if move.Steal >= 0 {
 		if g.Board[move.Steal].Rank == king {

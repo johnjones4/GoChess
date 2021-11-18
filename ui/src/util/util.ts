@@ -1,5 +1,5 @@
 import { Color, Rank } from './consts';
-import { Coordinate, Piece } from './types';
+import { Coordinate, Move, Piece } from './types';
 
 export const makeBoard = (): Coordinate[] => {
   const coords: Coordinate[] = []
@@ -54,4 +54,16 @@ export const stringForPiece = (p: Piece): string => {
     default:
       return ''
     }
+}
+
+export const stringForMove = (b: Piece[], m: Move): string => {
+  let str = `${stringForPiece(b[m.mover])} from ${stringForCoord(b[m.mover].coord)} to ${stringForCoord(m.coord)}`
+  if (m.steal >= 0) {
+    str += ` (takes ${stringForPiece(b[m.steal])})`
+  }
+  return str
+}
+
+export const stringForCoord = (c: Coordinate): string => {
+  return `${c.col},${c.row}`
 }

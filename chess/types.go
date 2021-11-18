@@ -29,17 +29,24 @@ type delta struct {
 
 type Board []Piece
 
+type LogItem struct {
+	Board []Piece `json:"board"`
+	Move  Move    `json:"move"`
+}
+
 type Game struct {
-	Board      Board `json:"board"`
-	Turn       int   `json:"turn"`
-	UserPlayer Color `json:"userPlayer"`
-	Winner     Color `json:"winner"`
+	Board      Board     `json:"board"`
+	Turn       int       `json:"turn"`
+	UserPlayer Color     `json:"userPlayer"`
+	Winner     Color     `json:"winner"`
+	Log        []LogItem `json:"log"`
 }
 
 type Node struct {
 	Depth      int
 	Board      Board
 	Edge       *Move
+	Parent     *Node
 	Children   []Node
 	IsOpponent bool
 	Player     Color

@@ -23,41 +23,24 @@ func pawnMoves(board Board, pi int) []Move {
 		}
 	}
 
-	if (p.Color == Black && p.Coord.Row == 1) || (p.Color == White && p.Coord.Row == boardSize-2) {
-		deltas = append(deltas, delta{direction * 2, 0})
-	}
-	if p.Coord.Row+direction >= 0 && p.Coord.Row+direction < boardSize {
-		if p.Coord.Col-1 >= 0 {
-			d := delta{direction, -1}
-			c1 := moveDelta(p.Coord, d)
-			targetPiece := pieceAtCoordinate(board, c1)
-			if targetPiece >= 0 && board[targetPiece].Color != p.Color {
-				deltas = append(deltas, d)
-			}
-		}
-		if p.Coord.Col+1 < 8 {
-			d := delta{direction, 1}
-			c1 := moveDelta(p.Coord, d)
-			targetPiece := pieceAtCoordinate(board, c1)
-			if targetPiece >= 0 && board[targetPiece].Color != p.Color {
-				deltas = append(deltas, d)
-			}
+	left := delta{direction, -1}
+	right := delta{direction, 1}
+	for _, stealDelta := range []delta{left, right} {
+		stealMoveC := moveDelta(p.Coord, stealDelta)
+		stealTargetPiece := pieceAtCoordinate(board, stealMoveC)
+		if isValidCoordinate(stealMoveC) && stealTargetPiece >= 0 && board[stealTargetPiece].Color != p.Color {
+			deltas = append(deltas, stealDelta)
 		}
 	}
+
 	moves := make([]Move, 0)
 	for _, d := range deltas {
-		targetCoord := Coordinate{
-			Row: p.Coord.Row + d.dr,
-			Col: p.Coord.Col + d.dc,
-		}
-		targetPiece := pieceAtCoordinate(board, targetCoord)
-		if targetPiece < 0 || board[targetPiece].Color != p.Color {
-			moves = append(moves, Move{
-				Mover: pi,
-				Coord: targetCoord,
-				Steal: targetPiece,
-			})
-		}
+		targetCoord := moveDelta(p.Coord, d)
+		moves = append(moves, Move{
+			Mover: pi,
+			Coord: targetCoord,
+			Steal: pieceAtCoordinate(board, targetCoord),
+		})
 	}
 	return moves
 }

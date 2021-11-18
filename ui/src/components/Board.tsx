@@ -68,23 +68,25 @@ export default class Board extends Component<BoardProps, BoardState>{
   render() {
     return (
       <div className='Board'>
-        { makeBoard().map((coord, i) => {
-          const pieceIndex = getPieceAtCoord(this.props.game.board, coord)
-          const piece = pieceIndex >= 0 ? this.props.game.board[pieceIndex] : null
-          return (
-            <button 
-              key={i}
-              grid-column-start={coord.col}
-              grid-column-end={coord.col}
-              grid-row-start={coord.row}
-              grid-row-end={coord.row}
-              disabled={this.props.game.winner >= 0 || (this.state.selected === null && piece?.color !== this.props.game.userPlayer) || (this.state.selected !== null && !this.isValidMoveForSelection(coord))}
-              onClick={() => this.selectTile(coord)}
-            >
-              { piece && stringForPiece(piece) }
-            </button>
-          )
-        }) }
+        <div className='Board-inner'>
+          { makeBoard().map((coord, i) => {
+            const pieceIndex = getPieceAtCoord(this.props.game.board, coord)
+            const piece = pieceIndex >= 0 ? this.props.game.board[pieceIndex] : null
+            return (
+              <button 
+                key={i}
+                grid-column-start={coord.col}
+                grid-column-end={coord.col}
+                grid-row-start={coord.row}
+                grid-row-end={coord.row}
+                disabled={this.props.game.winner >= 0 || (this.state.selected === null && piece?.color !== this.props.game.userPlayer) || (this.state.selected !== null && !this.isValidMoveForSelection(coord))}
+                onClick={() => this.selectTile(coord)}
+              >
+                { piece && stringForPiece(piece) }
+              </button>
+            )
+          }) }
+        </div>
       </div>
     )
   }

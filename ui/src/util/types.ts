@@ -16,11 +16,17 @@ export interface Move {
   steal: number
 }
 
+export interface LogItem {
+  board: Piece[]
+  move: Move
+}
+
 export interface Game {
   board: Piece[]
   turn: number
   userPlayer: number
   winner: number
+  log: LogItem[]
 }
 
 export interface GameArgs {

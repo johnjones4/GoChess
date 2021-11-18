@@ -20,8 +20,8 @@ func (n *Node) _string(str *strings.Builder, tabs int) {
 	if n.IsLeaf {
 		str.WriteString("-L")
 	}
-	if n.Edge != nil {
-		str.WriteString(" " + n.Edge.String(n.Board))
+	if n.Edge != nil && n.Parent != nil {
+		str.WriteString(" " + n.Edge.String(n.Parent.Board))
 	}
 	str.WriteString("\n")
 	for _, c := range n.Children {
@@ -55,17 +55,11 @@ func (n *Node) nextLevel() {
 		return
 	}
 	moves := n.Board.moves(n.Player)
-	if n.Depth == 1 {
-		for _, m := range moves {
-			fmt.Println(m.String(n.Board))
-		}
-		fmt.Println("")
-		// fmt.Println(moves)
-	}
 	n.Children = make([]Node, len(moves))
 	n.IsLeaf = len(moves) == 0
 	for i, m := range moves {
-		n.Children[i] = newNode(&n.Board, &m, n.Depth+1, opposite(n.Player), !n.IsOpponent)
+		m1 := m
+		n.Children[i] = newNode(n, n.Board, &m1, n.Depth+1, opposite(n.Player), !n.IsOpponent)
 	}
 }
 
@@ -79,7 +73,7 @@ func (n *Node) build(toDepth int) {
 	}
 }
 
-func newNode(b *Board, m *Move, depth int, c Color, opponent bool) Node {
+func newNode(p *Node, b Board, m *Move, depth int, c Color, opponent bool) Node {
 	b1 := b.copy()
 	if m != nil {
 		b1 = b1.doMove(*m)
@@ -89,13 +83,14 @@ func newNode(b *Board, m *Move, depth int, c Color, opponent bool) Node {
 		Depth:      depth,
 		Board:      b1,
 		Edge:       m,
+		Parent:     p,
 		IsOpponent: opponent,
 		Player:     c,
 		IsLeaf:     false,
 		Value:      0,
 	}
 
-	for _, p := range *b {
+	for _, p := range b {
 		if p.Rank == king && p.Stolen {
 			n.IsLeaf = true
 		}

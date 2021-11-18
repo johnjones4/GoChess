@@ -1,0 +1,13 @@
+body {
+  padding: 20px;
+  margin: 0;
+  background: green;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.GameBoard {
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  justify-content: center;
+}
