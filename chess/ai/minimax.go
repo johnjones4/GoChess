@@ -1,25 +1,31 @@
-package chess
+package ai
 
-func startMinimaxLocal(b Board, c Color) Move {
-	root := newNode(nil, b, nil, 0, c, false)
-	node, _ := minimaxLocal(&root, minInt, maxInt, 6)
+import (
+	"math"
+
+	"github.com/johnjones4/GoChess/chess/core"
+)
+
+func MinimaxLocal(b core.Board, c core.Color) core.Move {
+	root := NewNode(nil, b, nil, 0, c, false)
+	node, _ := Minimax(&root, -1.0, 1.0, 5)
 	return *node.Edge
 }
 
-func minimaxLocal(n *Node, alpha, beta int, maxDepth int) (*Node, int) {
+func Minimax(n *Node, alpha, beta float64, maxDepth int) (*Node, float64) {
 	if !n.IsLeaf && n.Depth != maxDepth {
-		n.nextLevel()
+		n.NextLevel()
 	}
 	if n.IsLeaf || n.Depth == maxDepth {
-		n.evaluate()
+		n.Evaluate()
 		return nil, n.Value
 	}
 	if !n.IsOpponent {
-		bestV := minInt
+		bestV := -1.0
 		var bestChild *Node = nil
 		for i := range n.Children {
 			child := &n.Children[i]
-			_, v := minimaxLocal(child, alpha, beta, maxDepth)
+			_, v := Minimax(child, alpha, beta, maxDepth)
 			if bestChild == nil || v >= bestV {
 				bestChild = child
 				bestV = v
@@ -27,7 +33,7 @@ func minimaxLocal(n *Node, alpha, beta int, maxDepth int) (*Node, int) {
 			if bestV >= beta {
 				break
 			}
-			alpha = max(alpha, bestV)
+			alpha = math.Max(alpha, bestV)
 		}
 		if bestChild == nil {
 			panic("no move")
@@ -36,10 +42,10 @@ func minimaxLocal(n *Node, alpha, beta int, maxDepth int) (*Node, int) {
 		return bestChild, bestV
 	} else {
 		var worstChild *Node = nil
-		var worstV = maxInt
+		var worstV = 1.0
 		for i := range n.Children {
 			child := &n.Children[i]
-			_, v := minimaxLocal(child, alpha, beta, maxDepth)
+			_, v := Minimax(child, alpha, beta, maxDepth)
 			if worstChild == nil || v <= worstV {
 				worstV = v
 				worstChild = child
@@ -47,7 +53,7 @@ func minimaxLocal(n *Node, alpha, beta int, maxDepth int) (*Node, int) {
 			if worstV <= alpha {
 				break
 			}
-			beta = min(beta, worstV)
+			beta = math.Min(beta, worstV)
 		}
 		if worstChild == nil {
 			panic("no move")

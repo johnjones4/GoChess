@@ -1,4 +1,4 @@
-package chess
+package core
 
 func pawnMoves(board Board, pi int) []Move {
 	p := board[pi]

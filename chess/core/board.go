@@ -1,15 +1,17 @@
-package chess
+package core
 
-import "errors"
+import (
+	"errors"
+)
 
-func (b Board) doMove(m Move) Board {
+func (b Board) DoMove(m Move) Board {
 	if b[m.Mover].Stolen {
 		panic("cannot move a stolen piece!")
 	}
 	if m.Steal >= 0 && b[m.Steal].Stolen {
 		panic("cannot steal a stolen piece!")
 	}
-	b1 := b.copy()
+	b1 := b.Copy()
 	b1[m.Mover].Coord = m.Coord
 	if m.Steal >= 0 {
 		b1[m.Steal].Stolen = true
@@ -17,13 +19,13 @@ func (b Board) doMove(m Move) Board {
 	return b1
 }
 
-func (b Board) copy() Board {
+func (b Board) Copy() Board {
 	b1 := make(Board, boardSize*4)
 	copy(b1, b)
 	return b1
 }
 
-func (board Board) moves(c Color) []Move {
+func (board Board) Moves(c Color) []Move {
 	moves := make([]Move, 0)
 	for i, p := range board {
 		if p.Color == c && !p.Stolen {
@@ -43,17 +45,17 @@ func (board Board) MovesForPiece(i int) ([]Move, error) {
 		return nil, errors.New("cannot move stolen piece")
 	}
 	switch p.Rank {
-	case pawn:
+	case Pawn:
 		return pawnMoves(board, i), nil
-	case rook:
+	case Rook:
 		return rookMoves(board, i), nil
-	case knight:
+	case Knight:
 		return knightMoves(board, i), nil
-	case bishop:
+	case Bishop:
 		return bishopMoves(board, i), nil
-	case queen:
+	case Queen:
 		return queenMoves(board, i), nil
-	case king:
+	case King:
 		return kingMoves(board, i), nil
 	default:
 		return nil, errors.New("bad rank")

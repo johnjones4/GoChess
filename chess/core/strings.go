@@ -1,4 +1,4 @@
-package chess
+package core
 
 import (
 	"fmt"
@@ -49,34 +49,34 @@ func (p Piece) String() string {
 	switch p.Color {
 	case White:
 		switch p.Rank {
-		case pawn:
+		case Pawn:
 			return "♟︎"
-		case rook:
+		case Rook:
 			return "♜"
-		case knight:
+		case Knight:
 			return "♞"
-		case bishop:
+		case Bishop:
 			return "♝"
-		case king:
+		case King:
 			return "♚"
-		case queen:
+		case Queen:
 			return "♛"
 		default:
 			return ""
 		}
 	case Black:
 		switch p.Rank {
-		case pawn:
+		case Pawn:
 			return "♙"
-		case rook:
+		case Rook:
 			return "♖"
-		case knight:
+		case Knight:
 			return "♘"
-		case bishop:
+		case Bishop:
 			return "♗"
-		case king:
+		case King:
 			return "♔"
-		case queen:
+		case Queen:
 			return "♕"
 		default:
 			return ""

@@ -1,4 +1,4 @@
-package chess
+package core
 
 type Color int
 
@@ -35,21 +35,11 @@ type LogItem struct {
 }
 
 type Game struct {
-	Board      Board     `json:"board"`
-	Turn       int       `json:"turn"`
-	UserPlayer Color     `json:"userPlayer"`
-	Winner     Color     `json:"winner"`
-	Log        []LogItem `json:"log"`
-}
-
-type Node struct {
-	Depth      int
-	Board      Board
-	Edge       *Move
-	Parent     *Node
-	Children   []Node
-	IsOpponent bool
-	Player     Color
-	IsLeaf     bool
-	Value      int
+	ID               int64     `json:"id"`
+	Board            Board     `json:"board"`
+	Turn             int       `json:"turn"`
+	UserPlayer       Color     `json:"userPlayer"`
+	Winner           Color     `json:"winner"`
+	Log              []LogItem `json:"log"`
+	computerPlayerFn func(Board, Color) Move
 }

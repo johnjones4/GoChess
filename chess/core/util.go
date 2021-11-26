@@ -1,27 +1,27 @@
-package chess
+package core
 
-func max(a, b int) int {
+func Max(a, b int) int {
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func min(a, b int) int {
+func Min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func abs(a int) int {
+func Abs(a int) int {
 	if a >= 0 {
 		return a
 	}
 	return -a
 }
 
-func opposite(c Color) Color {
+func Opposite(c Color) Color {
 	if c == White {
 		return Black
 	}
@@ -30,4 +30,8 @@ func opposite(c Color) Color {
 
 func coordsEqual(a, b Coordinate) bool {
 	return a.Row == b.Row && a.Col == b.Col
+}
+
+func Distance(a, b Coordinate) int {
+	return Abs(a.Row-b.Row) + Abs(a.Col-b.Col)
 }
